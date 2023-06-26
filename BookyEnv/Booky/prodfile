@@ -1,0 +1,1 @@
+web gunicorn Booky.wsgi:application --log-file -
