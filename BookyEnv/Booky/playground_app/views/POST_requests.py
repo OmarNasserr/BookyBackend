@@ -8,6 +8,7 @@ from datetime import datetime
 from ..models import Playground
 from ..serializers import PlaygroundSerializer
 from helper_files.permissions import AdminOnly
+from helper_files.status_code import Status_code
 from ..validations import PlaygroundAppValidations
 
 
@@ -20,7 +21,7 @@ class PlaygroundCreate(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         valid,err=serializer.is_valid(raise_exception=False)
         response = PlaygroundAppValidations.validate_playground_create(self.request.data,valid,err)
-        if response.status_code == 201:
+        if response.status_code == Status_code.bad_request:
             serializer.save()
 
         return response

@@ -10,6 +10,7 @@ from helper_files.permissions import AdminOrPlaygroundOwner,Permissions
 
 from django.conf import settings
 from helper_files.cryptography import AESCipher
+from helper_files.status_code import Status_code
 
 aes = AESCipher(settings.SECRET_KEY[:16], 32)
 
@@ -28,7 +29,7 @@ class PlaygroundDetail(generics.RetrieveUpdateDestroyAPIView):
             obj = playground[0]
         except:
             return Response(data={"message": "Playground wasn't found.",
-                              "status":status.HTTP_204_NO_CONTENT},status=status.HTTP_204_NO_CONTENT) 
+                              "status":Status_code.no_content},status=Status_code.no_content) 
         return Permissions.check_object_permissions(self=self,request=request,obj=obj)
     
     def get_object(self):
@@ -48,50 +49,33 @@ class PlaygroundDetail(generics.RetrieveUpdateDestroyAPIView):
         instance = self.get_object()
         if str(type(instance)) != "<class 'playground_app.models.Playground'>":
             return Response(data={"message": "Playground wasn't found.",
-                              "status":status.HTTP_204_NO_CONTENT},status=status.HTTP_204_NO_CONTENT)
+                              "status":Status_code.no_content},status=Status_code.no_content)
         else:    
             partial = kwargs.pop('partial', False)
-            instance = self.get_object()
             serializer = self.get_serializer(instance, data=request.data, partial=partial)
             
             valid,err=serializer.is_valid(raise_exception=True)
             response=PlaygroundAppValidations.validate_playground_update(self.request.data,valid,err)
-            if response.status_code == 202:
+            if response.status_code == Status_code.updated:
                 serializer.save()
                 response.data['playground']=serializer.data
-                print(response.data["playground"])
 
             return response
-    
-    def retrieve(self, request, *args, **kwargs):
+
+    def get(self, request, *args, **kwargs):
         instance = self.get_object()
-        if str(type(instance)) != "<class 'playground_app.models.Playground'>":
-            return Response(data={"message": "Playground wasn't found.",
-                              "status":status.HTTP_204_NO_CONTENT},status=status.HTTP_204_NO_CONTENT)
-        serializer = self.get_serializer(instance)
-        print(serializer.data)
-        return Response(data={
-                    "status":status.HTTP_200_OK,
-                    "id": serializer.data['id'],
-                    "governorate": serializer.data['governorate'],
-                    "p_name": serializer.data['p_name'],
-                    "open_time": serializer.data['open_time'],
-                    "close_time": serializer.data['close_time'],
-                    "total_available_time": serializer.data['total_available_time'],
-                    "description": serializer.data['description'],
-                    "price_per_hour": serializer.data['price_per_hour'],
-                    "city": serializer.data['city'],
-                    "playground_owner": serializer.data['playground_owner'],
-                    "images": serializer.data['images'],
-                    "hours_avaialble": PlaygroundSerializerHelper.get_all_available_paired_hours(
-                                            instance,request.data['date']),},
-                        status=status.HTTP_200_OK)
-    
+        response = self.retrieve(request, *args, **kwargs)
+        print("RES ",response.data)
+        response.data['status']=status.HTTP_200_OK
+        response.data['hours_available']=PlaygroundSerializerHelper.get_all_available_paired_hours(
+                                            instance,request.data['date'])
+        return response
+
     def delete(self, request, *args, **kwargs):
         instance = self.get_object()
         if str(type(instance)) != "<class 'playground_app.models.Playground'>":
             return Response(data={"message": "Playground wasn't found.",
-                              "status":status.HTTP_204_NO_CONTENT},status=status.HTTP_204_NO_CONTENT)
+                              "status":Status_code.no_content},status=Status_code.no_content)
         super().delete(request, *args, **kwargs)
         return Response(data={"message": "Playground was deleted successfully.",
-                              "status":status.HTTP_204_NO_CONTENT},status=status.HTTP_204_NO_CONTENT)
+                              "status":Status_code.no_content},status=Status_code.no_content)

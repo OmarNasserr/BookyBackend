@@ -56,8 +56,7 @@ class NearestPLaygrounds(generics.ListAPIView):
         
         returned_query=Playground.objects.filter(pk__in=nearest_playgrounds)
         
-        print("ret ",returned_query)
-        
+
         page = self.paginate_queryset(returned_query)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
