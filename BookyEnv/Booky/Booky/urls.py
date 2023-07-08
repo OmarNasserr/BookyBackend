@@ -9,5 +9,6 @@ urlpatterns = [
     path("api/v1/playground/", include("playground_app.urls")),
     path("api/v1/user/", include("user_app.urls")),
     path('api/v1/playground/booking/', include('booking_app.urls')),
+    path('api/v1/homepage/sliderimages/', include('content_manag_app.urls')),
 
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)   
