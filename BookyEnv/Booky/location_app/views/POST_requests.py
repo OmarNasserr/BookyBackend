@@ -9,6 +9,7 @@ from ..models import City,Governorate
 from ..serializers import GovSerializer
 from ..validations import LocationAppValidations
 from helper_files.permissions import AdminOnly
+from helper_files.status_code import Status_code
 
 
 
@@ -22,7 +23,7 @@ class GovCreate(generics.CreateAPIView):
         valid,err=serializer.is_valid(raise_exception=False)
         
         response = LocationAppValidations.validate_gov_create(self.request.data,valid,err)
-        if response.status_code==201:
+        if response.status_code==Status_code.created:
             serializer.save()
             
         return response 
@@ -37,7 +38,7 @@ class CityCreate(generics.CreateAPIView):
         valid,err=serializer.is_valid(raise_exception=False)
         
         response = LocationAppValidations.validate_city_create(self.request.data,valid,err)
-        if response.status_code==201:   
+        if response.status_code==Status_code.created:   
             serializer.save()
             
         return response 

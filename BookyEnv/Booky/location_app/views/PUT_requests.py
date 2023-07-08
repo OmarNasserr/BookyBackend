@@ -8,6 +8,7 @@ from helper_files.permissions import AdminOnly,Permissions
 
 from django.conf import settings
 from helper_files.cryptography import AESCipher
+from helper_files.status_code import Status_code
 
 aes = AESCipher(settings.SECRET_KEY[:16], 32)
 
@@ -26,7 +27,7 @@ class CityDetail(generics.RetrieveUpdateDestroyAPIView):
             obj = city[0]
         except:
             return Response(data={"message": "City wasn't found.",
-                              "status":status.HTTP_204_NO_CONTENT},status=status.HTTP_204_NO_CONTENT) 
+                              "status":Status_code.no_content},status=Status_code.no_content) 
         return Permissions.check_object_permissions(self=self,request=request,obj=obj)
     
     def get_object(self):
@@ -46,14 +47,14 @@ class CityDetail(generics.RetrieveUpdateDestroyAPIView):
         instance = self.get_object()
         if str(type(instance)) != "<class 'location_app.models.City'>":
             return Response(data={"message": "City wasn't found.",
-                              "status":status.HTTP_204_NO_CONTENT},status=status.HTTP_204_NO_CONTENT)
+                              "status":Status_code.no_content},status=Status_code.no_content)
         return super().update(request, *args, **kwargs)
     
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         if str(type(instance)) != "<class 'location_app.models.City'>":
             return Response(data={"message": "City wasn't found.",
-                              "status":status.HTTP_204_NO_CONTENT},status=status.HTTP_204_NO_CONTENT)
+                              "status":Status_code.no_content},status=Status_code.no_content)
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
     
@@ -61,10 +62,10 @@ class CityDetail(generics.RetrieveUpdateDestroyAPIView):
         instance = self.get_object()
         if str(type(instance)) != "<class 'location_app.models.City'>":
             return Response(data={"message": "City wasn't found.",
-                              "status":status.HTTP_204_NO_CONTENT},status=status.HTTP_204_NO_CONTENT)
+                              "status":Status_code.no_content},status=Status_code.no_content)
         super().delete(request, *args, **kwargs)
         return Response(data={"message": "City was deleted successfully.",
-                              "status":status.HTTP_204_NO_CONTENT},status=status.HTTP_204_NO_CONTENT)
+                              "status":Status_code.no_content},status=Status_code.no_content)
         
 class GovDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = GovSerializer
@@ -80,7 +81,7 @@ class GovDetail(generics.RetrieveUpdateDestroyAPIView):
             obj = gov[0]
         except:
             return Response(data={"message": "Governorate wasn't found.",
-                              "status":status.HTTP_204_NO_CONTENT},status=status.HTTP_204_NO_CONTENT) 
+                              "status":Status_code.no_content},status=Status_code.no_content) 
         return Permissions.check_object_permissions(self=self,request=request,obj=obj)
     
     def get_object(self):
@@ -100,14 +101,14 @@ class GovDetail(generics.RetrieveUpdateDestroyAPIView):
         instance = self.get_object()
         if str(type(instance)) != "<class 'location_app.models.Governorate'>":
             return Response(data={"message": "Governorate wasn't found.",
-                              "status":status.HTTP_204_NO_CONTENT},status=status.HTTP_204_NO_CONTENT)
+                              "status":Status_code.no_content},status=Status_code.no_content)
         return super().update(request, *args, **kwargs)
     
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         if str(type(instance)) != "<class 'location_app.models.Governorate'>":
             return Response(data={"message": "Governorate wasn't found.",
-                              "status":status.HTTP_204_NO_CONTENT},status=status.HTTP_204_NO_CONTENT)
+                              "status":Status_code.no_content},status=Status_code.no_content)
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
     
@@ -115,7 +116,7 @@ class GovDetail(generics.RetrieveUpdateDestroyAPIView):
         instance = self.get_object()
         if str(type(instance)) != "<class 'location_app.models.Governorate'>":
             return Response(data={"message": "Governorate wasn't found.",
-                              "status":status.HTTP_204_NO_CONTENT},status=status.HTTP_204_NO_CONTENT)
+                              "status":Status_code.no_content},status=Status_code.no_content)
         super().delete(request, *args, **kwargs)
         return Response(data={"message": "Governorate was deleted successfully.",
-                              "status":status.HTTP_204_NO_CONTENT},status=status.HTTP_204_NO_CONTENT)
+                              "status":Status_code.no_content},status=Status_code.no_content)
