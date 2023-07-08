@@ -37,13 +37,16 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    
+
     #apps
     "helper_files",
     "location_app",
     "playground_app",
     "user_app",
     "booking_app",
+    "content_manag_app",
+
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
@@ -116,6 +119,7 @@ USE_I18N = True
 
 USE_TZ = True
 
+# SECURE_SSL_REDIRECT=True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
