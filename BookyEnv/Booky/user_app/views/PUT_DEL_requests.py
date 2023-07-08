@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from ..serializers import UserSerializer
 from helper_files.permissions import AdminOrPlaygroundOwner,Permissions
 from helper_files.cryptography import AESCipher
+from helper_files.status_code import Status_code
 
 aes = AESCipher(settings.SECRET_KEY[:16], 32)
 
@@ -45,21 +46,21 @@ class UserDetailUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
         print(instance)
         if str(type(instance)) != "<class 'django.contrib.auth.models.User'>":
             return Response(data={"message": "User wasn't found.",
-                              "status":status.HTTP_204_NO_CONTENT},status=status.HTTP_204_NO_CONTENT)
+                              "status":Status_code.no_content},status=Status_code.no_content)
         return super().update(request, *args, **kwargs)
     
     def get(self, request, *args, **kwargs):
         instance = self.get_object()
         if str(type(instance)) != "<class 'django.contrib.auth.models.User'>":
             return Response(data={"message": "User wasn't found.",
-                              "status":status.HTTP_204_NO_CONTENT},status=status.HTTP_204_NO_CONTENT)
+                              "status":Status_code.no_content},status=Status_code.no_content)
         return self.retrieve(request, *args, **kwargs)
     
     def delete(self, request, *args, **kwargs):
         instance = self.get_object()
         if str(type(instance)) != "<class 'django.contrib.auth.models.User'>":
             return Response(data={"message": "User wasn't found.",
-                              "status":status.HTTP_204_NO_CONTENT},status=status.HTTP_204_NO_CONTENT)
+                              "status":Status_code.no_content},status=Status_code.no_content)
         super().delete(request, *args, **kwargs)
         return Response(data={"message": "User was deleted successfully.",
-                              "status":status.HTTP_204_NO_CONTENT},status=status.HTTP_204_NO_CONTENT)
+                              "status":Status_code.no_content},status=Status_code.no_content)

@@ -10,6 +10,7 @@ from ..serializers import RegisterationSerializer
 
 from django.conf import settings
 from helper_files.cryptography import AESCipher
+from helper_files.status_code import Status_code
 
 aes = AESCipher(settings.SECRET_KEY[:16], 32)
 
@@ -44,4 +45,4 @@ def registeration_view(request):
             'access': str(refresh.access_token)
         }
 
-        return Response(data, status=status.HTTP_201_CREATED)
+        return Response(data, status=Status_code.created)
