@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
 import re
+from helper_files.status_code import Status_code
 
 
 class UserAppValidation():
@@ -12,36 +13,36 @@ class UserAppValidation():
         if valid:
             if data['password_confirm'] != data['password']:
                 return Response(data={'message': "password_confirm does not match password.",
-                                      'status':status.HTTP_400_BAD_REQUEST},
-                                status=status.HTTP_400_BAD_REQUEST)
+                                      'status':Status_code.bad_request},
+                                status=Status_code.bad_request)
 
             if User.objects.filter(email=data['email']).exists():
                 return Response(data={'message': "this email already exists.",
-                                      'status':status.HTTP_400_BAD_REQUEST},
-                                status=status.HTTP_400_BAD_REQUEST)
+                                      'status':Status_code.bad_request},
+                                status=Status_code.bad_request)
             
             if User.objects.filter(username=data['username']).exists():
                 return Response(data={'message': "this user already exists.",
-                                      'status':status.HTTP_400_BAD_REQUEST},
-                                status=status.HTTP_400_BAD_REQUEST)
+                                      'status':Status_code.bad_request},
+                                status=Status_code.bad_request)
             
             if not re.match(email_regex,data['email']):
                 return Response(data={'message': "invalid email address.",
-                                      'status':status.HTTP_400_BAD_REQUEST},
-                                status=status.HTTP_400_BAD_REQUEST)
+                                      'status':Status_code.bad_request},
+                                status=Status_code.bad_request)
             
             if len(data['first_name'])<2:
                 return Response(data={'message': "first_name must be at least 2 characters",
-                                      'status':status.HTTP_400_BAD_REQUEST},
-                                status=status.HTTP_400_BAD_REQUEST)
+                                      'status':Status_code.bad_request},
+                                status=Status_code.bad_request)
             
             if len(data['last_name'])<2:
                 return Response(data={'message': "last_name must be at least 2 characters",
-                                      'status':status.HTTP_400_BAD_REQUEST},
-                                status=status.HTTP_400_BAD_REQUEST)
+                                      'status':Status_code.bad_request},
+                                status=Status_code.bad_request)
            
             else:
                return Response(status=status.HTTP_200_OK)
         else:
-            return Response(data={'message':str(err),"status":status.HTTP_400_BAD_REQUEST},
-                                    status=status.HTTP_400_BAD_REQUEST)
+            return Response(data={'message':str(err),"status":Status_code.bad_request},
+                                    status=Status_code.bad_request)
