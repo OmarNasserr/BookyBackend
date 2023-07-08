@@ -1,31 +1,32 @@
 from rest_framework.response import Response
 from rest_framework import status
+from helper_files.status_code import Status_code
 
 class LocationAppValidations(): 
     def validate_city_create(data,valid,err):
         if valid:
             if len(data['city_name'])<3:
                 return Response(data={'message':"City's name can't be less than three characters",
-                                      'status':status.HTTP_400_BAD_REQUEST},
-                                status=status.HTTP_400_BAD_REQUEST)
+                                      'status':Status_code.bad_request},
+                                status=Status_code.bad_request)
             else :
                 return Response(data={"message": "City was added successfully.",
-                                      'status':status.HTTP_201_CREATED}, 
-                                    status=status.HTTP_201_CREATED) 
+                                      'status':Status_code.created}, 
+                                    status=Status_code.created) 
         else:
-            return Response(data={'message':str(err),"status":status.HTTP_400_BAD_REQUEST},
-                                    status=status.HTTP_400_BAD_REQUEST)
+            return Response(data={'message':str(err),"status":Status_code.bad_request},
+                                    status=Status_code.bad_request)
             
     def validate_gov_create(data,valid,err):
         if valid:
             if len(data['gov_name'])<3:
                 return Response(data={'message':"Governorate's name can't be less than three characters",
-                                      'status':status.HTTP_400_BAD_REQUEST},
-                                status=status.HTTP_400_BAD_REQUEST)
+                                      'status':Status_code.bad_request},
+                                status=Status_code.bad_request)
             else :
                 return Response(data={"message": "Governorate was added successfully.",
-                                      'status':status.HTTP_201_CREATED}, 
-                                    status=status.HTTP_201_CREATED) 
+                                      'status':Status_code.created}, 
+                                    status=Status_code.created) 
         else:
-            return Response(data={'message':str(err),"status":status.HTTP_400_BAD_REQUEST},
-                                    status=status.HTTP_400_BAD_REQUEST)
+            return Response(data={'message':str(err),"status":Status_code.bad_request},
+                                    status=Status_code.bad_request)

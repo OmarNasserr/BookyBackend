@@ -10,6 +10,7 @@ from playground_app.helper import PlaygroundSerializerHelper
 from playground_app.models import Playground
 from .models import Booking
 from helper_files.time_operations_helper import TimeOperationsHelper
+from helper_files.status_code import Status_code
 
 
 class BookingAppValidations():
@@ -21,45 +22,45 @@ class BookingAppValidations():
         if valid:
             if not re.match(h_m_s_regex, data['start_time']):
                 return Response(data={'message': "Booking's start_time doesn't match time H:M:S format",
-                                      'status': status.HTTP_400_BAD_REQUEST},
-                                status=status.HTTP_400_BAD_REQUEST)
+                                      'status': Status_code.bad_request},
+                                status=Status_code.bad_request)
             if not re.match(h_m_s_regex, data['end_time']):
                 return Response(data={'message': "Booking's end_time doesn't match time H:M:S format",
-                                      'status': status.HTTP_400_BAD_REQUEST},
-                                status=status.HTTP_400_BAD_REQUEST)
+                                      'status': Status_code.bad_request},
+                                status=Status_code.bad_request)
             if data['start_time']==data['end_time']:
                 return Response(data={'message': "Booking's start_time and end_time can't be the same",
-                                      'status': status.HTTP_400_BAD_REQUEST},
-                                status=status.HTTP_400_BAD_REQUEST)
+                                      'status': Status_code.bad_request},
+                                status=Status_code.bad_request)
             if TimeOperationsHelper.convert_str_time_format(   
                 data['start_time'])>TimeOperationsHelper.convert_str_time_format( 
                 data['end_time']):
                 return Response(data={'message': "Booking's start_time can't be greater than end_time",
-                                      'status': status.HTTP_400_BAD_REQUEST},
-                                status=status.HTTP_400_BAD_REQUEST)
+                                      'status': Status_code.bad_request},
+                                status=Status_code.bad_request)
             if not re.match(yyyy_mm_dd_regex, data['date']):
                 return Response(data={'message': "Booking's date doesn't match time YYYY-MM-DD format",
-                                      'status': status.HTTP_400_BAD_REQUEST},
-                                status=status.HTTP_400_BAD_REQUEST)
+                                      'status': Status_code.bad_request},
+                                status=Status_code.bad_request)
             if not City.objects.filter(city_name=data['city']).exists:
                 return Response(data={'message': "No city was found with the name "+str(data['city']),
-                                      'status': status.HTTP_400_BAD_REQUEST},
-                                status=status.HTTP_400_BAD_REQUEST)
+                                      'status': Status_code.bad_request},
+                                status=Status_code.bad_request)
             else:
                 is_booking_available, availabe_hours = BookingAppValidations.validate_booking_time(
                     self, data)
                 if is_booking_available:
                     return Response(data={"message": "Booking was created successfully.",
-                                          'status': status.HTTP_201_CREATED},
-                                    status=status.HTTP_201_CREATED)
+                                          'status': Status_code.created},
+                                    status=Status_code.created)
                 else:
                     return Response(data={'message': "Playground is already booked",
-                                          'status': status.HTTP_400_BAD_REQUEST,
+                                          'status': Status_code.bad_request,
                                           "availabe_hours_to_be_booked": availabe_hours, },
-                                    status=status.HTTP_400_BAD_REQUEST)
+                                    status=Status_code.bad_request)
         else:
-            return Response(data={'message': str(err), "status": status.HTTP_400_BAD_REQUEST},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(data={'message': str(err), "status": Status_code.bad_request},
+                            status=Status_code.bad_request)
 
 
     def validate_booking_update(self, data, valid, err):
@@ -69,42 +70,42 @@ class BookingAppValidations():
         if valid:
             if not re.match(h_m_s_regex, data['start_time']):
                 return Response(data={'message': "Booking's start_time doesn't match time H:M:S format",
-                                      'status': status.HTTP_400_BAD_REQUEST},
-                                status=status.HTTP_400_BAD_REQUEST)
+                                      'status': Status_code.bad_request},
+                                status=Status_code.bad_request)
             if not re.match(h_m_s_regex, data['end_time']):
                 return Response(data={'message': "Booking's end_time doesn't match time H:M:S format",
-                                      'status': status.HTTP_400_BAD_REQUEST},
-                                status=status.HTTP_400_BAD_REQUEST)
+                                      'status': Status_code.bad_request},
+                                status=Status_code.bad_request)
             if data['start_time']==data['end_time']:
                 return Response(data={'message': "Booking's start_time and end_time can't be the same",
-                                      'status': status.HTTP_400_BAD_REQUEST},
-                                status=status.HTTP_400_BAD_REQUEST)
+                                      'status': Status_code.bad_request},
+                                status=Status_code.bad_request)
             if TimeOperationsHelper.convert_str_time_format(   
                 data['start_time'])>TimeOperationsHelper.convert_str_time_format( 
                 data['end_time']):
                 return Response(data={'message': "Booking's start_time can't be greater than end_time",
-                                      'status': status.HTTP_400_BAD_REQUEST},
-                                status=status.HTTP_400_BAD_REQUEST)
+                                      'status': Status_code.bad_request},
+                                status=Status_code.bad_request)
             if not re.match(yyyy_mm_dd_regex, data['date']):
                 return Response(data={'message': "Booking's date doesn't match time YYYY-MM-DD format",
-                                      'status': status.HTTP_400_BAD_REQUEST},
-                                status=status.HTTP_400_BAD_REQUEST)
+                                      'status': Status_code.bad_request},
+                                status=Status_code.bad_request)
             else:
                 is_booking_available, availabe_hours = BookingAppValidations.validate_booking_time(
                     self, data)
                 if is_booking_available:
                     return Response(data={"message": "Booking was updated successfully.",
-                                          'status': status.HTTP_202_ACCEPTED},
-                                    status=status.HTTP_202_ACCEPTED)
+                                          'status': Status_code.updated},
+                                    status=Status_code.updated)
                 else:
                     return Response(data={'message': "Playground is already booked for the time slot "+
                                           str(data['start_time'])+" : "+str(data['end_time']),
-                                          'status': status.HTTP_400_BAD_REQUEST,
+                                          'status': Status_code.bad_request,
                                           "availabe_hours_to_be_booked": availabe_hours, },
-                                    status=status.HTTP_400_BAD_REQUEST)
+                                    status=Status_code.bad_request)
         else:
-            return Response(data={'message': str(err), "status": status.HTTP_400_BAD_REQUEST},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(data={'message': str(err), "status": Status_code.bad_request},
+                            status=Status_code.bad_request)
 
 
     # booking here is represented in request.data

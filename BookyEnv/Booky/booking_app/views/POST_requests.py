@@ -9,6 +9,7 @@ from ..validations import BookingAppValidations
 from ..models import Booking
 from django.conf import settings
 from helper_files.cryptography import AESCipher
+from helper_files.status_code import Status_code
 
 aes = AESCipher(settings.SECRET_KEY[:16], 32)
 
@@ -25,7 +26,7 @@ class BookingCreate(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         valid,err=serializer.is_valid(raise_exception=False)
         response = BookingAppValidations.validate_booking_created(self,request.data,valid,err)
-        if response.status_code == 201:
+        if response.status_code == Status_code.created:
             serializer.save()
             response.data['booking']={
                 'booking_id':serializer.data['id'],
