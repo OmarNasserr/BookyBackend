@@ -21,7 +21,7 @@ class PlaygroundCreate(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         valid,err=serializer.is_valid(raise_exception=False)
         response = PlaygroundAppValidations.validate_playground_create(self.request.data,valid,err)
-        if response.status_code == Status_code.bad_request:
+        if response.status_code == Status_code.created:
             serializer.save()
 
         return response
