@@ -65,7 +65,6 @@ class PlaygroundDetail(generics.RetrieveUpdateDestroyAPIView):
     def get(self, request, *args, **kwargs):
         instance = self.get_object()
         response = self.retrieve(request, *args, **kwargs)
-        print("RES ",response.data)
         response.data['status']=status.HTTP_200_OK
         response.data['hours_available']=PlaygroundSerializerHelper.get_all_available_paired_hours(
                                             instance,request.data['date'])
