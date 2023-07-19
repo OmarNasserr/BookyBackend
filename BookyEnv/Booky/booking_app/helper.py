@@ -21,15 +21,11 @@ class BookingAppHelper():
             date=date
         )
 
-        # expired_bookings_ids = [
-        #     book.id for book in playground_booked_times if
-        #     datetime.datetime.strptime(str(book.expiration_time), FMT).time() <= datetime.datetime.now().time()
-        # ]
-        # filtered_bookings = [book for book in playground_booked_times if book.id not in expired_bookings_ids]
-        # playground_booked_times = filtered_bookings
-        # Booking.objects.filter(id__in=expired_bookings_ids).delete()
-
-        playground_booked_times=BookingAppHelper.check_expired_bookings(playground_booked_times,FMT)
+        # this checks if there are any expired bookings
+        # it means that a booking's expiration date >= datetime.now()
+        # a booking gets expired if the user didn't pay through the given code in the
+        # given range of time
+        playground_booked_times = BookingAppHelper.check_expired_bookings(playground_booked_times, FMT)
 
         to_be_removed = []  # we add booked hours to this list to be removed later, as if we removed
         # directly from the main list some iterating problems were raised in indexing
@@ -75,6 +71,10 @@ class BookingAppHelper():
 
         return to_be_booked_hours
 
+    # this function extracts the ids of the bookings of a given playground in a specific date
+    # and checks the expirations of the bookings, and if a booking is expired
+    # it deletes them from the Booking table and then returns the playground_booked_times
+    # as a list instead of Queryset
     def check_expired_bookings(playground_booked_times, FMT):
         expired_bookings_ids = [
             book.id for book in playground_booked_times if
