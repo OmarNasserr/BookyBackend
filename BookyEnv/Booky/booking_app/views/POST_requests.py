@@ -28,16 +28,8 @@ class BookingCreate(generics.CreateAPIView):
         response = BookingAppValidations.validate_booking_created(self,request.data,valid,err)
         if response.status_code == Status_code.created:
             serializer.save()
-            response.data['booking']={
-                'booking_id':serializer.data['id'],
-                'playground_id':serializer.data['playground_id'],
-                'reservationist_id':serializer.data['reservationist'],
-                'playground_name':serializer.data['playground_name'],
-                'date':serializer.data['date'],
-                'start_time':serializer.data['start_time'],
-                'end_time':serializer.data['end_time'],
-                'booking_hours':serializer.data['booking_hours'],
-                'price_paid':serializer.data['total_price_to_be_paid'],
+            response.data['booking'] = {
+                key: serializer.data[key] for key in serializer.data.keys()
             }
         return response
 
