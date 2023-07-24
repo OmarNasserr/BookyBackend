@@ -64,6 +64,9 @@ class PlaygroundDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def get(self, request, *args, **kwargs):
         instance = self.get_object()
+        if str(type(instance)) != "<class 'playground_app.models.Playground'>":
+            return Response(data={"message": "Playground wasn't found.",
+                              "status":Status_code.no_content},status=Status_code.no_content)
         response = self.retrieve(request, *args, **kwargs)
         response.data['status']=status.HTTP_200_OK
         response.data['hours_available']=PlaygroundSerializerHelper.get_all_available_paired_hours(
