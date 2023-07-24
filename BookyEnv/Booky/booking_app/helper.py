@@ -75,11 +75,13 @@ class BookingAppHelper():
     # and checks the expirations of the bookings, and if a booking is expired
     # it deletes them from the Booking table and then returns the playground_booked_times
     # as a list instead of Queryset
-    def check_expired_bookings(playground_booked_times, FMT):
+    def check_expired_bookings(playground_booked_times, FMT='%H:%M:%S'):
         expired_bookings_ids = [
             book.id for book in playground_booked_times if
-            datetime.datetime.strptime(str(book.expiration_time), FMT).time() <= datetime.datetime.now().time()
+            datetime.datetime.strptime(str(book.expiration_time), FMT).time() <= datetime.datetime.now().time() and
+            book.payment_status != 'paid'
         ]
+        print("EX ",expired_bookings_ids)
         filtered_bookings = [book for book in playground_booked_times if book.id not in expired_bookings_ids]
         playground_booked_times = filtered_bookings
         Booking.objects.filter(id__in=expired_bookings_ids).delete()

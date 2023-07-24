@@ -23,7 +23,7 @@ class Booking(models.Model):
     booking_hours = models.IntegerField(blank=True, null=True)
     total_price_to_be_paid = models.FloatField(blank=True, null=True)
     expiration_time = models.TimeField(null=True, blank=True,
-                                       default=(datetime.now() + timedelta(minutes=15)).time().strftime('%H:%M'))
+                                       default=(datetime.now() + timedelta(minutes=15)).time().strftime('%H:%M:%S'))
     payment_status = models.CharField(max_length=20, choices=PAYMENT_STATUS_CHOICES, default='pending')
 
     def __str__(self):

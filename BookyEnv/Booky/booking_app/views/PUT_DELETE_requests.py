@@ -54,11 +54,12 @@ class BookingDetail(generics.RetrieveUpdateDestroyAPIView):
             instance = self.get_object()
             serializer = self.get_serializer(instance, data=request.data, partial=partial)
 
-            valid,err=serializer.is_valid(raise_exception=True)
+            valid,err=serializer.is_valid(raise_exception=False)
 
-            request.data._mutable = True
-            request.data['playground_id'] = instance.playground_id.id
-            response=BookingAppValidations.validate_booking_update(self,self.request.data,valid,err)
+            if request.data:
+                request.data._mutable = True
+                request.data['playground_id'] = instance.playground_id.id
+            response=BookingAppValidations.validate_booking_update(self,self.request.data,valid,err,instance)
             if response.status_code == Status_code.updated:
                 serializer.save()
                 response.data['booking']=serializer.data
