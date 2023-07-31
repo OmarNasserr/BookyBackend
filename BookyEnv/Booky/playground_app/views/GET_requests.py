@@ -17,9 +17,9 @@ class PlaygroundList(generics.ListAPIView):
 
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['p_name', 'city__city_name', 'city__governorate',
-                        'open_time', 'close_time', 'price_per_hour', 'id']
+                        'open_time', 'close_time', 'price_per_hour', 'id', 'playground_owner__username']
     search_fields = ['p_name', 'city__city_name',
-                     'open_time', 'close_time', 'price_per_hour', 'city__governorate__gov_name', ]
+                     'open_time', 'close_time', 'price_per_hour', 'city__governorate__gov_name', 'playground_owner__username']
 
     def get(self, request, *args, **kwargs):
         PlaygroundPagination.set_default_page_number_and_page_size(request)
