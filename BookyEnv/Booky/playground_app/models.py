@@ -20,7 +20,7 @@ class Playground(models.Model):
     description = models.CharField(
         validators=[MinLengthValidator(10)], max_length=1000)
     price_per_hour = models.FloatField(
-        validators=[MinValueValidator(10)], blank=True)
+        validators=[MinValueValidator(10)], blank=False,null=False)
     created_at = models.CharField(default=str(datetime.now().strftime(
         "%d %b, %Y - %Ih%Mm%S %p")), max_length=100)
     updated_at = models.CharField(default=str(datetime.now().strftime(
