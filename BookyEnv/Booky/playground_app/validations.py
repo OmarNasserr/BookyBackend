@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status
 import re
 from helper_files.status_code import Status_code
+from django.contrib.auth.models import User
 
 
 class PlaygroundAppValidations():
@@ -29,6 +30,11 @@ class PlaygroundAppValidations():
             if float(data['price_per_hour']) < 10.0:
                 return Response(data={'message': "Playground's price can't be less than 10 pounds",
                                       'status':Status_code.bad_request},
+                                status=Status_code.bad_request)
+            user = User.objects.filter(username=data['playground_owner'])[0]
+            if not user or not user.is_superuser:
+                return Response(data={'message': "This user is not authorized to create a new playground.",
+                                      'status': Status_code.bad_request},
                                 status=Status_code.bad_request)
             else:
                 return Response(data={"message": "Playground was added successfully.",
