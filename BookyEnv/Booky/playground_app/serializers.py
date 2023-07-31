@@ -4,7 +4,10 @@ import datetime
 from .models import Playground, PlaygroundImage
 from .helper import PlaygroundSerializerHelper
 from helper_files.serializer_helper import SerializerHelper
-from helper_files.images_utils import Images_utils
+from helper_files.cryptography import AESCipher
+from django.conf import settings
+
+aes = AESCipher(settings.SECRET_KEY[:16], 32)
 
 
 class PlaygroundImageSerializer(serializers.ModelSerializer):
@@ -22,6 +25,7 @@ class PlaygroundImageSerializer(serializers.ModelSerializer):
 
 class PlaygroundSerializer(serializers.ModelSerializer):
     governorate = serializers.SerializerMethodField('get_gov_from_city')
+    p_owner_id = serializers.SerializerMethodField('get_playground_owner_id')
     images = PlaygroundImageSerializer(many=True, read_only=True)
 
     uploaded_images = serializers.ListField(
@@ -46,6 +50,10 @@ class PlaygroundSerializer(serializers.ModelSerializer):
         gov = playground.city.governorate.gov_name
         return gov
 
+    def get_playground_owner_id(self, playground):
+        owner_id=playground.playground_owner.id
+        return aes.encrypt(str(owner_id))
+
     def create(self, validated_data):
         uploaded_images = validated_data.pop('uploaded_images')
         playground = Playground.objects.create(**validated_data)
@@ -69,6 +77,7 @@ class PlaygroundSerializer(serializers.ModelSerializer):
 
 class PlaygroundListAllSerializer(serializers.ModelSerializer):
     governorate = serializers.SerializerMethodField('get_gov_from_city')
+    p_owner_id = serializers.SerializerMethodField('get_playground_owner_id')
     images = PlaygroundImageSerializer(many=True, read_only=True, )
 
     class Meta:
@@ -79,6 +88,11 @@ class PlaygroundListAllSerializer(serializers.ModelSerializer):
     def get_gov_from_city(self, playground):
         gov = playground.city.governorate.gov_name
         return gov
+
+    def get_playground_owner_id(self, playground):
+        owner_id=playground.playground_owner.id
+        print("OWNER ", owner_id)
+        return aes.encrypt(str(owner_id))
 
     def to_representation(self, instance):
         return SerializerHelper.to_representation(
