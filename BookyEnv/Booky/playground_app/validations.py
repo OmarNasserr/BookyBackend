@@ -15,6 +15,10 @@ class PlaygroundAppValidations():
                 return Response(data={'message': "Playground's name can't be less than three characters",
                                       'status':Status_code.bad_request},
                                 status=Status_code.bad_request)
+            if len(data['p_name']) > 20:
+                return Response(data={'message': "Playground's name can't be more than 20 characters",
+                                      'status':Status_code.bad_request},
+                                status=Status_code.bad_request)
             if not re.match(h_m_s_regex,data['open_time']):
                 return Response(data={'message': "Playground's open_time doesn't match time H:M:S format",
                                       'status':Status_code.bad_request},
@@ -58,6 +62,10 @@ class PlaygroundAppValidations():
                 if len(data['p_name'])!=0 and len(data['p_name'])< 3:
                     return Response(data={'message': "Playground's name can't be less than three characters",
                                             'status':Status_code.bad_request},
+                                    status=Status_code.bad_request)
+                if len(data['p_name']) > 20:
+                    return Response(data={'message': "Playground's name can't be more than 20 characters",
+                                          'status': Status_code.bad_request},
                                     status=Status_code.bad_request)
             if 'open_time' in data.keys():      
                 if not re.match(h_m_s_regex,data['open_time']):
